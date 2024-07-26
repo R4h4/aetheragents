@@ -55,3 +55,17 @@ style = [
   "ruff check {args:.}",
   "ruff format --check {args:.}",
 ]
+
+[tool.hatch.envs.type]
+dependencies = [
+  "mypy",
+  # Add any other dependencies required for type checking
+]
+
+[tool.hatch.envs.type.scripts]
+check = "mypy ."
+
+[tool.mypy]
+exclude = [
+    '(^|/)tests?/'  # Excludes any directory named 'test' or 'tests'
+]

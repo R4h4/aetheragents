@@ -1,9 +1,12 @@
+from typing import Any
+
+
 class TextOutput:
     """
     A class for handling and processing text output.
     """
 
-    def handle(self, raw_result: str, remove_extra_whitespace: bool = False) -> str:
+    def handle(self, raw_result: str, **kwargs: Any) -> str:
         """
         Process the input text by stripping whitespace and optionally removing extra whitespace.
 
@@ -12,6 +15,8 @@ class TextOutput:
         :return: The processed text
         :raises ValueError: If the input is not a string
         """
+        remove_extra_whitespace = kwargs.get("remove_extra_whitespace", True)
+
         if not isinstance(raw_result, str):
             raise ValueError("Input must be a string")
 
@@ -19,6 +24,7 @@ class TextOutput:
 
         if remove_extra_whitespace:
             import re
-            processed_text = re.sub(r'\s+', ' ', processed_text)
+
+            processed_text = re.sub(r"\s+", " ", processed_text)
 
         return processed_text

@@ -1,10 +1,11 @@
 import pytest
+from typing import Any
 from aetheragents.processors.openai import OpenAIProcessor, InputType
 from unittest.mock import MagicMock
 
 
 @pytest.fixture
-def openai_processor():
+def openai_processor() -> OpenAIProcessor:
     return OpenAIProcessor(
         api_key="test_api_key",
         model="test_model",
@@ -18,17 +19,17 @@ def openai_processor():
     )
 
 
-def test_process_text_input(openai_processor):
+def test_process_text_input(openai_processor: OpenAIProcessor) -> None:
     openai_processor.client = MagicMock()
     openai_processor.client.chat.completions.create.return_value = MagicMock(
         choices=[MagicMock(message=MagicMock(content="Test response"))]
     )
-    result = openai_processor.process(name="World")
+    result: str = openai_processor.process(name="World")
     assert result == "Test response"
     openai_processor.client.chat.completions.create.assert_called_once()
 
 
-def test_process_image_input():
+def test_process_image_input() -> None:
     processor = OpenAIProcessor(
         api_key="test_api_key",
         model="test_model",
@@ -39,13 +40,15 @@ def test_process_image_input():
     processor.client.chat.completions.create.return_value = MagicMock(
         choices=[MagicMock(message=MagicMock(content="Image response"))]
     )
-    result = processor.process(object="cat", image="base64encodedimage")
+    result: str = processor.process(object="cat", image="base64encodedimage")
     assert result == "Image response"
     processor.client.chat.completions.create.assert_called_once()
 
 
-def test_prepare_messages_text(openai_processor):
-    messages = openai_processor._prepare_messages({"name": "World"})
+def test_prepare_messages_text(openai_processor: OpenAIProcessor) -> None:
+    messages: list[dict[str, str]] = openai_processor._prepare_messages(
+        {"name": "World"}
+    )
     assert messages == [
         {"role": "system", "content": "System message"},
         {"role": "user", "content": "Hello, World!"},
@@ -56,14 +59,14 @@ def test_prepare_messages_text(openai_processor):
     ]
 
 
-def test_prepare_messages_image():
+def test_prepare_messages_image() -> None:
     processor = OpenAIProcessor(
         api_key="test_api_key",
         model="test_model",
         prompt="Describe the image of {object}.",
         input_type=InputType.IMAGE,
     )
-    messages = processor._prepare_messages(
+    messages: list[dict[str, Any]] = processor._prepare_messages(
         {"object": "cat", "image": "base64encodedimage"}
     )
     assert messages == [
@@ -80,11 +83,11 @@ def test_prepare_messages_image():
     ]
 
 
-def test_validate_input_missing_keys(openai_processor):
+def test_validate_input_missing_keys(openai_processor: OpenAIProcessor) -> None:
     with pytest.raises(ValueError, match="Missing required arguments: name"):
         openai_processor.validate_input(set())
 
 
-def test_validate_input_extra_keys(openai_processor):
+def test_validate_input_extra_keys(openai_processor: OpenAIProcessor) -> None:
     with pytest.raises(ValueError, match="Unexpected arguments provided: extra"):
         openai_processor.validate_input({"name", "extra"})

@@ -2,6 +2,7 @@ import re
 from typing import Dict, Any, Set, List
 
 import openai
+from openai.types.chat import ChatCompletion
 
 
 class InputType:
@@ -14,10 +15,10 @@ class OpenAIProcessor:
         self,
         model: str,
         prompt: str,
-        system_prompt: str = None,
-        api_key: str = None,
-        base_url: str = None,
-        output_schema: Dict[str, Any] = None,
+        system_prompt: str | None = None,
+        api_key: str | None = None,
+        base_url: str | None = None,
+        output_schema: Dict[str, Any] | None = None,
         input_type: str = InputType.TEXT,
     ):
         self.model = model
@@ -35,16 +36,18 @@ class OpenAIProcessor:
 
         messages = self._prepare_messages(kwargs)
 
-        response = self.client.chat.completions.create(
+        response: ChatCompletion = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             response_format={"type": "json_object"} if self.output_schema else None,
-        )
+        )  # type: ignore
+        if not response.choices[0].message.content:
+            raise ValueError("Failed to generate a response")
 
         return response.choices[0].message.content
 
     def _prepare_messages(self, kwargs: Dict[str, Any]) -> List[Dict[str, Any]]:
-        messages = []
+        messages: List[Dict[str, Any]] = []
         if self.system_prompt:
             messages.append({"role": "system", "content": self.system_prompt})
 

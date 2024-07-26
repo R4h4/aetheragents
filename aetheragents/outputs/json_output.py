@@ -7,11 +7,13 @@ T = TypeVar("T", bound=BaseModel)
 
 class InvalidJSONError(Exception):
     """Raised when the input is not valid JSON."""
+
     pass
 
 
 class SchemaValidationError(Exception):
     """Raised when the JSON does not match the expected schema."""
+
     pass
 
 
@@ -45,7 +47,9 @@ class JSONOutput(Generic[T]):
         try:
             return self.model.model_validate(parsed_json)
         except ValidationError as e:
-            raise SchemaValidationError(f"JSON does not match expected schema: {e}") from e
+            raise SchemaValidationError(
+                f"JSON does not match expected schema: {e}"
+            ) from e
 
     def get_model_schema(self) -> Dict[str, Any]:
         """

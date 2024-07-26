@@ -1,6 +1,6 @@
 from typing import Protocol, TypeVar, Any, runtime_checkable
 
-T = TypeVar('T')
+T = TypeVar("T", covariant=True)
 
 
 @runtime_checkable

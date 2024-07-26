@@ -1,9 +1,9 @@
 import json
-from typing import Dict, Set
+from typing import Dict, Set, Any
 
 
 class FunctionCallOutput:
-    def handle(self, raw_result: str) -> Dict:
+    def handle(self, raw_result: str) -> Dict[str, Any]:
         try:
             function_call = json.loads(raw_result)
         except json.JSONDecodeError:

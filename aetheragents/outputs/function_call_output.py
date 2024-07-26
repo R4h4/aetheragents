@@ -14,11 +14,12 @@ class FunctionCallOutput:
 
         return {
             "function": function_call["function"],
-            "arguments": function_call["arguments"]
+            "arguments": function_call["arguments"],
         }
 
     def validate_output(self, parsed_result: Dict, expected_keys: Set[str]):
         missing_keys = expected_keys - set(parsed_result.keys())
         if missing_keys:
-            raise ValueError(f"Missing expected keys in output: {', '.join(missing_keys)}")
-
+            raise ValueError(
+                f"Missing expected keys in output: {', '.join(missing_keys)}"
+            )

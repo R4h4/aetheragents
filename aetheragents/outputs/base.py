@@ -1,9 +1,20 @@
-from typing import Any, Dict, Protocol, Set
+from typing import Protocol, TypeVar, Any, runtime_checkable
+
+T = TypeVar('T')
 
 
-class OutputHandler(Protocol):
-    def handle(self, raw_result: Any) -> Any:
-        ...
+@runtime_checkable
+class OutputHandler(Protocol[T]):
+    """
+    A protocol defining the interface for output processors.
+    """
 
-    def validate_output(self, parsed_result: Dict, expected_keys: Set[str]) -> None:
+    def handle(self, raw_result: str, **kwargs: Any) -> T:
+        """
+        Process the raw result string and return the processed output.
+
+        :param raw_result: The raw string result to be processed
+        :param kwargs: Additional keyword arguments for processing options
+        :return: The processed result of type T
+        """
         ...

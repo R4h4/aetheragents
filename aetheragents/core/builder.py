@@ -9,15 +9,15 @@ class AgentBuilder:
         self.output_handler = None
         self.input_type = None
 
-    def set_processor(self, processor: Processor) -> 'AgentBuilder':
+    def set_processor(self, processor: Processor) -> "AgentBuilder":
         self.processor = processor
         return self
 
-    def set_output_handler(self, output_handler: OutputHandler) -> 'AgentBuilder':
+    def set_output_handler(self, output_handler: OutputHandler) -> "AgentBuilder":
         self.output_handler = output_handler
         return self
 
-    def set_input_type(self, input_type: str) -> 'AgentBuilder':
+    def set_input_type(self, input_type: str) -> "AgentBuilder":
         self.input_type = input_type
         return self
 
